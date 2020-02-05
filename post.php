@@ -1,3 +1,7 @@
+<?php
+    require './lib.inc.php';
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,20 +20,37 @@
 
                 <section class="uk-margin-large-left uk-margin-large-right">
                 <div class="uk-card uk-card-default uk-padding-large uk-width-1@m">
-                <form>
+                <form action="#" enctype="multipart/form-data" method="post">
                     <fieldset class="uk-fieldset">
 
-                        <legend class="uk-legend">Ajouter un post ...</legend>
+                        
+
+                        <legend class="uk-legend"><img class="uk-border-circle  uk-align-right" width="40" height="40" src="img/avatar.jpg">Nouveau post</legend>
+                        
+                        
 
                         <div class="uk-margin">
                             <input class="uk-input" type="text" placeholder="Titre ...">
+                            
                         </div>
+
+                        
 
                         <div class="uk-margin">
                             <textarea class="uk-textarea" rows="5" placeholder="Description ..."></textarea>
                         </div>
-
+                        <div class="js-upload uk-placeholder uk-text-center">
+                            <span uk-icon="icon: cloud-upload"></span>
+                            <span class="uk-text-middle">Déposez une image ou ajoutez la </span>
+                            <div uk-form-custom>
+                                <input type="file" multiple accept="image/x-png,image/gif,image/jpeg" >
+                                <span class="uk-link">en cliquant ici</span>
+                            </div>
+                        </div>
+                        <button class="uk-button uk-button-primary uk-align-right" type="submit">Publier</button>
                     </fieldset>
+
+                    
                 </form>
                 </div>
 
