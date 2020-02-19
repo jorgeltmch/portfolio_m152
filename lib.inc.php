@@ -5,26 +5,14 @@
         Date : 08.10.19
     */
 
-    function DB(){
-        static $db = null;
+    require_once 'EDatabase.php';
 
-        if ($db == null) {
-            try {
-                $db = new PDO('mysql:host=localhost;dbname=m152', "jorge", "Super");
-            } catch (PDOException $e) {
-                print "Error!: " . $e->getMessage() . "<br/>";
-                die();
-            }
-        }
 
-        return $db;
-    }       
 
-    
 
-    function addPost($titre, $description, $typeMedia, $nomFichier){
-        $sql = "INSERT INTO Post(titrePost, descriptionPost, dateCreationPost, dateModificationPost) VALUES(:titre, :descr, :dateCrea, :dateModif)";
-        $req = DB()->prepare($sql, array(PDO::ATTR_CURSOR, PDO::CURSOR_SCROLL));
+    function addPost($titre, $description, $typeMedia, $nomFichier, $sizeFichier, $tmpNameFichier){
+        $sql = "INSERT INTO Post(titrePost, descriptionPost, dateCreationPost, dateModificationPost) VALUES(:titrePost, :descriptionArticle, :dateCrea, :dateModif)";
+        $req = EDatabase::prepare($sql, array(PDO::ATTR_CURSOR, PDO::CURSOR_SCROLL));
         $req->execute(
           array(
              'titrePost' => $titre,
@@ -33,11 +21,11 @@
              'dateModif' => date("Y-m-d H:i:s")
              )
          );
-        $id = DB()->lastInsertId();
+        $id = EDatabase::lastInsertId();
 
 
         $sql = "INSERT INTO Media(typeMedia, nomFichierMedia, dateCreationMedia, dateModificationMedia, idPost) VALUES(:typeMedia, :nomFichier, :dateCrea, :dateModif, :post)";
-        $req = DB()->prepare($sql, array(PDO::ATTR_CURSOR, PDO::CURSOR_SCROLL));
+        $req = EDatabase::prepare($sql, array(PDO::ATTR_CURSOR, PDO::CURSOR_SCROLL));
         $req->execute(
           array(
              'typeMedia' => $typeMedia,
@@ -46,7 +34,22 @@
              'dateModif' => date("Y-m-d H:i:s"),
              'post' => $id
              )
-         );   
+         );  
+         
+         addMediaToServer($typeMedia, $tmpNameFichier, $sizeFichier);
+    }
+
+
+    //TODO : REMETTRE BIEN LES FONCTIONS
+    function addMediaToServer($typeFichier, $tmpName, $sizeFichier){
+        $typesAcceptes = array("image/gif", "image/png", "image/jpeg", "video/mp4", "audio/mpeg"); //PAS SECURISE, A SECURISER
+
+
+        if (in_array($typeFichier, $typesAcceptes)) {
+            move_uploaded_file($tmpName, "/img");
+        }
+
+
     }
 
 ?>

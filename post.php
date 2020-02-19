@@ -1,5 +1,24 @@
 <?php
     require './lib.inc.php';
+
+    $titre = (empty($_POST["titre"])) ? "" : filter_input(INPUT_POST, "titre", FILTER_SANITIZE_STRING);
+    $description = (empty($_POST["description"])) ? "" : filter_input(INPUT_POST, "description", FILTER_SANITIZE_STRING);
+    $nomFichier = (empty($_FILES['img']['name'])) ? "" : $_FILES['img']['name'];
+    $typeFichier = (empty($_FILES['img']['type'])) ? "" : $_FILES['img']['type'];
+
+
+    $sizeFichier = (empty($_FILES['img']['size'])) ? "" : $_FILES['img']['size'];
+    $tmpNameFichier = (empty($_FILES['img']['tmp_name'])) ? "" : $_FILES['img']['tmp_name'];
+
+    //POUR PLUS TARD
+    // $_FILES['img']['size'];
+    // $_FILES['img']['tmp_name'];
+    // $_FILES['img']['error'];
+
+    if (!empty($titre) && !empty($description) && !empty($nomFichier) && !empty($typeFichier) && !empty($sizeFichier) && !empty($tmpNameFichier) ) {
+        addPost($titre, $description, $typeFichier, $nomFichier,  $sizeFichier, $tmpNameFichier);
+    }
+    //addPost($titre, $description, $typeMedia, $nomFichier)
 ?>
 
 <!DOCTYPE html>
@@ -30,20 +49,20 @@
                         
 
                         <div class="uk-margin">
-                            <input class="uk-input" type="text" placeholder="Titre ...">
+                            <input class="uk-input" name="titre" type="text" placeholder="Titre ...">
                             
                         </div>
 
                         
 
                         <div class="uk-margin">
-                            <textarea class="uk-textarea" rows="5" placeholder="Description ..."></textarea>
+                            <textarea class="uk-textarea" name="description" rows="5" placeholder="Description ..."></textarea>
                         </div>
                         <div class="js-upload uk-placeholder uk-text-center">
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle">Déposez une image ou ajoutez la </span>
                             <div uk-form-custom>
-                                <input type="file" multiple accept="image/x-png,image/gif,image/jpeg" >
+                                <input type="file" name="img[]" multiple accept="image/x-png,image/gif,image/jpeg" >
                                 <span class="uk-link">en cliquant ici</span>
                             </div>
                         </div>
