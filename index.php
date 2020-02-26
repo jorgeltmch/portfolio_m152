@@ -1,22 +1,39 @@
+<?php
+require './lib.inc.php';
+
+$posts = getPosts();
+//var_dump($posts);
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>AroufBook</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/uikit.css" />
-        <link rel="stylesheet" href="css/newcss.css" />
-        <script src="js/uikit.min.js"></script>
-        <script src="js/uikit-icons.min.js"></script>
-    </head>
-    <body>
-        <header>
-                <?php include 'navbar.php'?>
-        </header>
 
-        <section class="uk-margin-large-left uk-margin-large-right">
-        <div class="uk-child-width-1-3@m" uk-grid>
-    <div>
+<head>
+    <title>AroufBook</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/uikit.css" />
+    <link rel="stylesheet" href="css/newcss.css" />
+    <script src="js/uikit.min.js"></script>
+    <script src="js/uikit-icons.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <?php include 'navbar.php' ?>
+    </header>
+
+    <section class="uk-margin-large-left uk-margin-large-right">
+        <div class="uk-child-width-1-4@m" uk-grid>
+
+            <?php
+            displayPosts($posts);
+            ?>
+            <!-- <div>
         <div class="uk-card uk-card-default">
         <div class="uk-card-header">
                         <div class="uk-grid-small uk-flex-middle" uk-grid>
@@ -78,16 +95,16 @@
                         <p>Mon frere Ademo Ademo et Ademo, NOS n'a pas pu être présent</p>
                     </div>
         </div>
-    </div>
-</div>
+    </div> -->
+        </div>
 
-            </section>
-    </body>
+    </section>
+</body>
 
-    <footer>
-        <center>
-            CFPT Informaque - Jorge Machado
-        </center>
-    </footer>
+<footer>
+    <center>
+        CFPT Informaque - Jorge Machado
+    </center>
+</footer>
 
 </html>
