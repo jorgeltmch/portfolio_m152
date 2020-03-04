@@ -9,15 +9,21 @@
 
     $sizeFichier = (empty($_FILES['img']['size'])) ? "" : $_FILES['img']['size'];
     $tmpNameFichier = (empty($_FILES['img']['tmp_name'])) ? "" : $_FILES['img']['tmp_name'];
+    
+    $errFichier = (empty($_FILES['img']['error'])) ? "" : $_FILES['img']['error'][0] ;
+
 
     //POUR PLUS TARD
     // $_FILES['img']['size'];
     // $_FILES['img']['tmp_name'];
     // $_FILES['img']['error'];
-
-    if (!empty($titre) && !empty($description) && !empty($nomFichier) && !empty($typeFichier) && !empty($sizeFichier) && !empty($tmpNameFichier) ) {
-        addPost($titre, $description, $typeFichier, $nomFichier,  $sizeFichier, $tmpNameFichier);
+    if ($errFichier == 0) {
+        if (!empty($titre) && !empty($description) && !empty($nomFichier) && !empty($typeFichier) && !empty($sizeFichier) && !empty($tmpNameFichier) ) {
+            addPost($titre, $description, $typeFichier, $nomFichier,  $sizeFichier, $tmpNameFichier);
+        }
     }
+
+    
     //addPost($titre, $description, $typeMedia, $nomFichier)
 ?>
 

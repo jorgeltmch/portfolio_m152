@@ -62,72 +62,94 @@ function getPosts()
 }
 
 
-function addPostAndMedia(){
-    EDatabase::beginTransaction();
 
-    //SI PAS OK
-    EDatabase::rollBack();
-
-    //SI OK
-    EDatabase::commit(); 
-
-}
 
 
 function addPost($titre, $description, $typeMedia, $nomFichier, $sizeFichier, $tmpNameFichier)
 {
+
+    try {
+        EDatabase::beginTransaction();
+
+        $sql = "INSERT INTO Post(titrePost, descriptionPost, dateCreationPost, dateModificationPost) VALUES(:titrePost, :descriptionArticle, :dateCrea, :dateModif)";
+        $req = EDatabase::prepare($sql);
+        $req->execute(
+            array(
+                'titrePost' => $titre,
+                'descriptionArticle' => $description,
+                'dateCrea' => date("Y-m-d H:i:s"),
+                'dateModif' => date("Y-m-d H:i:s")
+            )
+        );
+
+        if (!empty($nomFichier)) {
+            $id = EDatabase::lastInsertId();
     
-    $sql = "INSERT INTO Post(titrePost, descriptionPost, dateCreationPost, dateModificationPost) VALUES(:titrePost, :descriptionArticle, :dateCrea, :dateModif)";
-    $req = EDatabase::prepare($sql);
-    $req->execute(
-        array(
-            'titrePost' => $titre,
-            'descriptionArticle' => $description,
-            'dateCrea' => date("Y-m-d H:i:s"),
-            'dateModif' => date("Y-m-d H:i:s")
-        )
-    );
+            $sql = "INSERT INTO Media(typeMedia, nomFichierMedia, dateCreationMedia, dateModificationMedia, idPost) VALUES(:typeMedia, :nomFichier, :dateCrea, :dateModif, :post)";
+    
+            for ($i = 0; $i < count($nomFichier); $i++) {
 
-    if (!empty($nomFichier)) {
-        $id = EDatabase::lastInsertId();
+                $tmp = changeFileNameIfExists($nomFichier[$i]);
+                $req = EDatabase::prepare($sql);
+                $req->execute(
+                    array(
+                        'typeMedia' => $typeMedia[$i],
+                        'nomFichier' => $tmp,
+                        'dateCrea' => date("Y-m-d H:i:s"),
+                        'dateModif' => date("Y-m-d H:i:s"),
+                        'post' => $id
+                    )
+                );
 
-        $sql = "INSERT INTO Media(typeMedia, nomFichierMedia, dateCreationMedia, dateModificationMedia, idPost) VALUES(:typeMedia, :nomFichier, :dateCrea, :dateModif, :post)";
-
-        for ($i = 0; $i < count($nomFichier); $i++) {
-            $req = EDatabase::prepare($sql);
-            $req->execute(
-                array(
-                    'typeMedia' => $typeMedia[$i],
-                    'nomFichier' => $nomFichier[$i],
-                    'dateCrea' => date("Y-m-d H:i:s"),
-                    'dateModif' => date("Y-m-d H:i:s"),
-                    'post' => $id
-                )
-            );
-
-            addMediaToServer($nomFichier[$i], $typeMedia[$i], $tmpNameFichier[$i], $sizeFichier[$i]);
+                addMediaToServer($tmp, $typeMedia[$i], $tmpNameFichier[$i], $sizeFichier[$i]);
+    
+            }
         }
+        EDatabase::commit(); 
+    } catch (\Throwable $th) {
+        EDatabase::rollBack();
     }
+
+}
+
+function changeFileNameIfExists($fileName , $cpt = 0){
+
+    while(file_exists("./img/" . $cpt . $fileName)){
+        $cpt++;
+    }
+
+    return $cpt . $fileName; 
+
 }
 
 
-//TODO : REMETTRE BIEN LES FONCTIONS
+
+//TODO : LE NOM DU FICHIER DOIT ETRE ENVOYE A SQL
 function addMediaToServer($nomFichier, $typeFichier, $tmpName, $sizeFichier, $cpt = 0)
 {
     $typesAcceptes = array("image/gif", "image/png", "image/jpeg", "video/mp4", "audio/mpeg"); //PAS SECURISE, A SECURISER
 
-
-
-    if (in_array($typeFichier, $typesAcceptes)) {
-        if (file_exists("./img/" . $nomFichier)) {
-
-            $cpt++;
-            $temp = explode(".", $nomFichier);
-
-            addMediaToServer($cpt . $nomFichier, $typeFichier, $tmpName, $sizeFichier, $cpt);
-        } else {
-
-            move_uploaded_file($tmpName, "./img/" . $nomFichier);
+    try {
+        if (in_array($typeFichier, $typesAcceptes)) {
+            if (file_exists("./img/" . $cpt . $nomFichier)) { //TODO : while a la place de if
+    
+                $cpt++;
+    
+                addMediaToServer( $nomFichier, $typeFichier, $tmpName, $sizeFichier, $cpt);
+            } 
+            else{
+                //$nomFichier = $cpt .= $nomFichier;
+                if (!move_uploaded_file($tmpName, "./img/" .  $nomFichier)){
+                    throw new Exception();    //si il retourne false, throw, si il throw deja il va dans le catch
+              }
+            }
+    
+              
+            
         }
+    } catch (\Throwable $th) {
+        throw new Exception();
     }
+
+
 }
