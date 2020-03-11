@@ -17,6 +17,7 @@
     // $_FILES['img']['size'];
     // $_FILES['img']['tmp_name'];
     // $_FILES['img']['error'];
+    var_dump($errFichier );
     if ($errFichier == 0) {
         if (!empty($titre) && !empty($description) && !empty($nomFichier) && !empty($typeFichier) && !empty($sizeFichier) && !empty($tmpNameFichier) ) {
             addPost($titre, $description, $typeFichier, $nomFichier,  $sizeFichier, $tmpNameFichier);
@@ -68,7 +69,7 @@
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle">Déposez une image ou ajoutez la </span>
                             <div uk-form-custom>
-                                <input type="file" name="img[]" multiple accept="image/x-png,image/gif,image/jpeg" >
+                                <input type="file" name="img[]" multiple accept="video/mp4,video/x-m4v,video/*,image/x-png,image/gif,image/jpeg" >
                                 <span class="uk-link">en cliquant ici</span>
                             </div>
                         </div>
