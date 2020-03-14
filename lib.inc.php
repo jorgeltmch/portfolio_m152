@@ -47,6 +47,12 @@ function displayPosts($posts){
                                            
                                         </li>";
                                         }
+                                        
+                                        else if(mime_content_type('img/'. $fichier["nomFichierMedia"] )=='audio/mpeg'){
+                                            $html .=  "<audio controls=\"controls\" > ";
+                                            $html .= "<source src=\"img/" . $fichier["nomFichierMedia"]  . "\" type=\"audio/mpeg\" /> ";
+                                            $html .= "</audio>";
+                                        }
                                         else{
                                             $html .= "<li>
 
@@ -210,7 +216,7 @@ function addMediaToServer($nomFichier, $typeFichier, $tmpName, $sizeFichier, $cp
     $typesAcceptes = array("image/gif", "image/png", "image/jpeg", "video/mp4", "audio/mpeg"); //PAS SECURISE, A SECURISER
 
     try {
-        //if (in_array($typeFichier, $typesAcceptes)) {
+        //if (in_array($typeFichier, $typesAcceptes)) { //TODO ajouter securité
 
                 //$nomFichier = $cpt .= $nomFichier;
                 if (!move_uploaded_file($tmpName, "./img/" .  changeFileNameIfExists($nomFichier))){
