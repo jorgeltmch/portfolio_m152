@@ -78,7 +78,7 @@ function displayPosts($posts){
                         }
                                 
                         $html .= "<div class=\"uk-card-body\">\n
-                            <p>" . $post["descriptionPost"] . " <a  class=\"uk-align-right\" href=\"\" uk-icon=\"icon: pencil\"> </a> <a class=\"uk-align-right\" href=\"\" uk-icon=\"icon: trash\"> </a></p> \n
+                            <p>" . $post["descriptionPost"] . " <a  class=\"uk-align-right\" href=\"index.php?update=" .  $post["idPost"] . "\" uk-icon=\"icon: pencil\"> </a> <a class=\"uk-align-right\" href=\"index.php?delete=".  $post["idPost"] . "\" uk-icon=\"icon: trash\"> </a></p> \n
                         </div>\n
             </div>\n
         </div>\n";
@@ -208,15 +208,58 @@ function changeFileNameIfExists($fileName , $cpt = 0){
    
 }
 
+function removePost($id){
+    try {
+        EDatabase::beginTransaction();
 
+        
+        removeMediaFromServer($id);
 
+        $sql = "DELETE FROM Media WHERE idPost = :id";
+        $req = EDatabase::prepare($sql);
+        $req->execute(
+                array(
+                    'id' => $id
+                )
+        );
+
+        $sql = "DELETE FROM Post WHERE idPost = :id";
+        $req = EDatabase::prepare($sql);
+        $req->execute(
+            array(
+                'id' => $id
+            )
+        );
+    
+        EDatabase::commit(); 
+        }
+ catch (\Throwable $th) {
+        EDatabase::rollBack();
+    }
+
+}
+
+function removeMediaFromServer($id){
+    $medias =  getMediaFromPostID($id);
+    
+    try {
+        foreach ($medias as $key => $fichier) {
+            unlink("img/" .  $fichier["nomFichierMedia"]);
+        }
+    } catch (\Throwable $th) {
+        throw new Exception();
+    }
+
+    
+}
 
 function addMediaToServer($nomFichier, $typeFichier, $tmpName, $sizeFichier, $cpt = 0)
 {
-    $typesAcceptes = array("image/gif", "image/png", "image/jpeg", "video/mp4", "audio/mpeg"); //PAS SECURISE, A SECURISER
+    $typesAcceptes = array("image/gif", "image/png", "image/jpeg", "video/mp4", "audio/mpeg"); 
 
     try {
-        //if (in_array($typeFichier, $typesAcceptes)) { //TODO ajouter securité
+        //$test = mime_content_type($nomFichier);
+        if (in_array(mime_content_type($tmpName), $typesAcceptes)) {
 
                 //$nomFichier = $cpt .= $nomFichier;
                 if (!move_uploaded_file($tmpName, "./img/" .  changeFileNameIfExists($nomFichier))){
@@ -225,7 +268,7 @@ function addMediaToServer($nomFichier, $typeFichier, $tmpName, $sizeFichier, $cp
     
               
             
-        //}
+        }
     } catch (\Throwable $th) {
         throw new Exception();
     }

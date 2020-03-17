@@ -4,8 +4,13 @@ require './lib.inc.php';
 $posts = getPosts();
 //var_dump($posts);
 
+$idToDelete = (!empty($_GET["delete"])) ? $_GET["delete"] : "" ;
+$idToUpdate = (!empty($_GET["update"])) ? $_GET["update"] : "" ;
 
 
+if (!empty($idToDelete)) {
+    removePost($idToDelete);
+}
 
 ?>
 
@@ -33,69 +38,7 @@ $posts = getPosts();
             <?php
             displayPosts($posts);
             ?>
-            <!-- <div>
-        <div class="uk-card uk-card-default">
-        <div class="uk-card-header">
-                        <div class="uk-grid-small uk-flex-middle" uk-grid>
-                            <div class="uk-width-auto">
-                                <img class="uk-border-circle" width="40" height="40" src="img/avatar.jpg">
-                            </div>
-                            <div class="uk-width-expand">
-                                <h3 class="uk-card-title uk-margin-remove-bottom">Arouf partout</h3>
-                                <p class="uk-text-meta uk-margin-remove-top"><time datetime="2016-04-01T19:00">April 01, 2016</time></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-card-media-top">
-                                <img src="img/cfpt.jpg" alt="" width="100%" height="100%">
-                            </div>
-                    <div class="uk-card-body">
-                        <p>Meme au CFPT</p>
-                    </div>
-        </div>
-    </div>
-    <div>
-        <div class="uk-card uk-card-default">
-        <div class="uk-card-header">
-                        <div class="uk-grid-small uk-flex-middle" uk-grid>
-                            <div class="uk-width-auto">
-                                <img class="uk-border-circle" width="40" height="40" src="img/avatar.jpg">
-                            </div>
-                            <div class="uk-width-expand">
-                                <h3 class="uk-card-title uk-margin-remove-bottom">Arouf a Paris</h3>
-                                <p class="uk-text-meta uk-margin-remove-top"><time datetime="2016-04-01T19:00">April 01, 2016</time></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-card-media-top">
-                                <img src="img/paris.jpg" alt="" width="100%" height="100%">
-                            </div>
-                    <div class="uk-card-body">
-                        <p>Le plus beau des rebeux</p>
-                    </div>
-        </div>
-    </div>
-    <div>
-        <div class="uk-card uk-card-default">
-        <div class="uk-card-header">
-                        <div class="uk-grid-small uk-flex-middle" uk-grid>
-                            <div class="uk-width-auto">
-                                <img class="uk-border-circle" width="40" height="40" src="img/avatar.jpg">
-                            </div>
-                            <div class="uk-width-expand">
-                                <h3 class="uk-card-title uk-margin-remove-bottom">Mes freres :)</h3>
-                                <p class="uk-text-meta uk-margin-remove-top"><time datetime="2016-04-01T19:00">April 01, 2016</time></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-card-media-top">
-                                <img src="img/ademo.jpg" alt="" width="100%" height="100%">
-                            </div>
-                    <div class="uk-card-body">
-                        <p>Mon frere Ademo Ademo et Ademo, NOS n'a pas pu être présent</p>
-                    </div>
-        </div>
-    </div> -->
+
         </div>
 
     </section>
