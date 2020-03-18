@@ -10,6 +10,7 @@ $idToUpdate = (!empty($_GET["update"])) ? $_GET["update"] : "" ;
 
 if (!empty($idToDelete)) {
     removePost($idToDelete);
+    
 }
 
 ?>
